@@ -2,6 +2,12 @@ FROM alpine
 MAINTAINER support@oneidentity.com
 
 RUN apk -U --no-cache add \
+        man \
+        man-pages \
+        mdocml-apropos \
+        less \
+        less-doc \
+        texinfo \
         shadow \
         vim \
         curl \
@@ -14,8 +20,10 @@ RUN apk -U --no-cache add \
         openssl \
         openssh \
         tinc \
+        tinc-doc \
         nodejs \
         npm \
+    && export PAGER=less \
     && rm /usr/bin/vi \
     && ln -s /usr/bin/vim /usr/bin/vi \
     && groupadd -r safeguard \
