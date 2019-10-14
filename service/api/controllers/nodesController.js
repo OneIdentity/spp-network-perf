@@ -7,9 +7,10 @@ exports.getAllNodes = function(req, res) {
     //console.log('error', child.error);
     //console.log('stdout ', child.stdout);
     //console.log('stderr ', child.stderr);
+    res.send('node1,node2,node3');
 };
 
 exports.getNode = function(req, res) {
-    // req.params.nodeId
+    res.send('node' + req.params.nodeId);
 };
 
