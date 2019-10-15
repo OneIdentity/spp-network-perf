@@ -24,7 +24,6 @@ RUN apk -U --no-cache add \
         nodejs \
         npm \
         iperf3 \
-    && export PAGER=less \
     && rm /usr/bin/vi \
     && ln -s /usr/bin/vim /usr/bin/vi \
     && groupadd -r safeguard \
@@ -34,9 +33,16 @@ RUN apk -U --no-cache add \
 
 COPY .bashrc /home/safeguard/
 COPY scripts/ /scripts/
+COPY keys/ /keys/
 COPY service/ /service/
 
-RUN cd /service && npm install
+RUN mkdir -p /etc/tinc/hosts \
+    && chown -R safeguard:safeguard /etc/tinc \
+    && chown -R safeguard:safeguard /home/safeguard \
+    && chown -R safeguard:safeguard /scripts \
+    && chown -R safeguard:safeguard /keys \
+    && chown -R safeguard:safeguard /service \
+    && cd /service && npm install
 
 USER safeguard
 WORKDIR /home/safeguard
