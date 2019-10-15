@@ -42,11 +42,8 @@ if [ ! -z "$(which docker)" ]; then
     if [ $? -ne 0 ]; then
         $ScriptDir/build.sh
     fi
-    echo -e "${YELLOW}Running the spp-network-perf container.\n" \
-            "You can specify an alternate startup command using arguments to this script.\n" \
-            "The default entrypoint is bash, so use the -c argument.\n" \
-            "  e.g. run-service.sh -c /bin/bash${NC}"
-    docker run -p $IpAddress:8080:8080 -p $IpAddress:655:655/udp --env-file <(echo "LOCAL_IP=$IpAddress") -it spp-network-perf "$@"
+    echo -e "${YELLOW}Running the spp-network-perf container with IP Address: $IpAddress${NC}"
+    docker run -p $IpAddress:8080:8080 -p $IpAddress:655:655 -p $IpAddress:655:655/udp --env-file <(echo "LOCAL_IP=$IpAddress") -it spp-network-perf "$@"
 else
     >&2 echo "You must install docker to use this script"
 fi
