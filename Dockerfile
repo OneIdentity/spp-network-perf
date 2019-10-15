@@ -23,6 +23,7 @@ RUN apk -U --no-cache add \
         tinc-doc \
         nodejs \
         npm \
+        iperf3 \
     && export PAGER=less \
     && rm /usr/bin/vi \
     && ln -s /usr/bin/vim /usr/bin/vi \
@@ -32,10 +33,14 @@ RUN apk -U --no-cache add \
     && chown -R safeguard:safeguard /home/safeguard
 
 COPY .bashrc /home/safeguard/
+COPY scripts/ /scripts/
+COPY service/ /service/
+
+RUN cd /service && npm install
 
 USER safeguard
 WORKDIR /home/safeguard
 
 ENTRYPOINT ["/bin/bash"]
-CMD ["-c","exec /bin/bash --rcfile <(echo '. /home/safeguard/.bashrc')"]
+CMD ["-c","exec /bin/bash --rcfile <(echo '. /home/safeguard/.bashrc; /scripts/start.sh')"]
 
