@@ -31,6 +31,12 @@ if test -t 1; then
     NC='\033[0m'
 fi
 
+# not sure this command will work on Mac
+IpAddress=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
+if (( $(grep -c . <<<$IpAddress) > 1 )); then
+    read -p "IP address ($(echo $IpAddress | tr '\n' ' ')): "
+fi
+
 if [ ! -z "$(which docker)" ]; then
     docker images | grep safeguard-bash
     if [ $? -ne 0 ]; then
@@ -40,7 +46,7 @@ if [ ! -z "$(which docker)" ]; then
             "You can specify an alternate startup command using arguments to this script.\n" \
             "The default entrypoint is bash, so use the -c argument.\n" \
             "  e.g. run-service.sh -c /bin/bash${NC}"
-    docker run -it spp-network-perf "$@"
+    docker run -p $IpAddress::8080 -p $IpAddress::655/udp --env-file <(echo "LOCAL_IP=$IpAddress") -it spp-network-perf "$@"
 else
     >&2 echo "You must install docker to use this script"
 fi

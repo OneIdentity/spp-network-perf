@@ -33,5 +33,5 @@ echo -e "${YELLOW}Starting iperf server on VPN interface on TCP port 443${NC}"
 
 
 echo -e "${YELLOW}Starting the web service on port 8080${NC}"
-cd /scripts && npm run start
+cd /service && npm run start
 
