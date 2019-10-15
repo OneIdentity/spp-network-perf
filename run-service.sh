@@ -46,7 +46,7 @@ if [ ! -z "$(which docker)" ]; then
             "You can specify an alternate startup command using arguments to this script.\n" \
             "The default entrypoint is bash, so use the -c argument.\n" \
             "  e.g. run-service.sh -c /bin/bash${NC}"
-    docker run -p $IpAddress::8080 -p $IpAddress::655/udp --env-file <(echo "LOCAL_IP=$IpAddress") -it spp-network-perf "$@"
+    docker run -p $IpAddress:8080:8080 -p $IpAddress:655:655/udp --env-file <(echo "LOCAL_IP=$IpAddress") -it spp-network-perf "$@"
 else
     >&2 echo "You must install docker to use this script"
 fi
