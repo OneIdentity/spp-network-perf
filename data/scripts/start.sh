@@ -48,7 +48,6 @@ IpV6List=${IpV6List%,}
 
 
 echo -e "${YELLOW}Setting up tinc.conf, hosts, and keys${NC}"
-
 for i in $(seq 1 $(get_count $IpList)); do
     Ip=$(get_by_index $IpList $i)
     IpV6=$(get_by_index $IpV6List $i)
@@ -83,13 +82,25 @@ $(cat $PubKey)
 EOF
 done
 
+
+cleanup()
+{
+    kill $(cat iperf3.pid)
+    tincd --pidfile=tinc.pid -k
+    echo -e "${YELLOW}Ignore warning about null byte in input"
+}
+trap cleanup EXIT
+
+
 echo -e "${YELLOW}Starting tincd${NC}"
 mkdir -p /dev/net
 mknod /dev/net/tun c 10 200
 chmod 600 /dev/net/tun
+tincd --pidfile=tinc.pid --logfile=tinc.log
 
 
 echo -e "${YELLOW}Starting iperf server on VPN interface on TCP port 443${NC}"
+iperf3 -s -p 443 -B $IpV6 -I iperf3.pid --logfile iperf3.log -D
 
 
 echo -e "${YELLOW}Starting the web service on port 8080${NC}"
