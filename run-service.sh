@@ -32,9 +32,15 @@ if test -t 1; then
 fi
 
 # not sure this command will work on Mac
-IpAddress=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
-if (( $(grep -c . <<<$IpAddress) > 1 )); then
-    read -p "IP address ($(echo $IpAddress | tr '\n' ' ')): "
+if [ "$(uname)" = "Darwin" ]; then
+    IpAddress=$(ifconfig | grep inet | grep -v inet6 | cut -d' ' -f2 | tr '\n' ',')
+else
+    IpAddress=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p' | tr '\n' ',')
+fi
+IpAddress=${IpAddress%,}
+
+if [ $(echo $IpAddress | awk -F',' '{print NF}') -gt 1 ]; then
+    read -p "IP Address ($IpAddress): " IpAddress
 fi
 
 if [ ! -z "$(which docker)" ]; then

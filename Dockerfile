@@ -1,6 +1,8 @@
 FROM alpine
 MAINTAINER support@oneidentity.com
 
+COPY data/ /data/
+
 RUN apk -U --no-cache add \
         man \
         man-pages \
@@ -26,29 +28,14 @@ RUN apk -U --no-cache add \
         iperf3 \
     && rm /usr/bin/vi \
     && ln -s /usr/bin/vim /usr/bin/vi \
-    && groupadd -r safeguard \
-    && useradd -r -g safeguard -s /bin/bash safeguard \
-    && mkdir -p /home/safeguard \
-    && chown -R safeguard:safeguard /home/safeguard
-
-COPY data/ /data/
-
-RUN mv /data/.bashrc /home/safeguard \
+    && mv /data/.bashrc /root \
     && mv /data/scripts /scripts \
     && mv /data/keys /keys \
     && mv /data/service /service \
     && rm -rf /data \
     && mkdir -p /etc/tinc/hosts \
-    && chown -R safeguard:safeguard /etc/tinc \
-    && chown -R safeguard:safeguard /home/safeguard \
-    && chown -R safeguard:safeguard /scripts \
-    && chown -R safeguard:safeguard /keys \
-    && chown -R safeguard:safeguard /service \
     && cd /service && npm install
 
-USER safeguard
-WORKDIR /home/safeguard
-
 ENTRYPOINT ["/bin/bash"]
-CMD ["-c","exec /bin/bash --rcfile <(echo '. /home/safeguard/.bashrc; /scripts/start.sh')"]
+CMD ["-c","exec /bin/bash --rcfile <(echo '. /root/.bashrc; /scripts/start.sh')"]
 
