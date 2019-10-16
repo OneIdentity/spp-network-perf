@@ -96,8 +96,8 @@ done
 
 cleanup()
 {
-    kill $(cat iperf3.pid)
-    tincd --pidfile=tinc.pid -k
+    kill $(cat /iperf3.pid)
+    tincd --pidfile=/tinc.pid -k
     echo -e "${YELLOW}Ignore warning about null byte in input${NC}"
 }
 trap cleanup EXIT
@@ -107,12 +107,12 @@ echo -e "${YELLOW}Starting tincd${NC}"
 mkdir -p /dev/net
 mknod /dev/net/tun c 10 200
 chmod 600 /dev/net/tun
-tincd --pidfile=tinc.pid --logfile=tinc.log
+tincd --pidfile=/tinc.pid --logfile=/tinc.log
 
 
 echo -e "${YELLOW}Starting iperf server on VPN interface on TCP port 443${NC}"
 sleep 3
-iperf3 -s -p 443 -B $IpV6 -I iperf3.pid --logfile iperf3.log -D
+iperf3 -s -p 443 -B $IpV6 -I /iperf3.pid --logfile /iperf3.log -D
 
 
 echo -e "${YELLOW}Starting the web service on port 8080${NC}"

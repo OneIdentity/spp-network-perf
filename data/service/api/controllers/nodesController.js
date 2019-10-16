@@ -13,6 +13,12 @@ exports.getAllNodes = function(req, res) {
 };
 
 exports.getNode = function(req, res) {
-    res.send('node' + req.params.nodeId);
+    const child = exec('/scripts/get-node.sh ' + req.params.nodeId, (err, stdout, stderr) => {
+        if (err) {
+            console.error(`exec error: ${err}`);
+            return;
+        }
+        res.send(`${stdout}`);
+    });
 };
 
