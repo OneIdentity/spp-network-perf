@@ -15,6 +15,7 @@ app.listen(port);
 
 console.log('Web API server started on: ' + port);
 console.log('Endpoints:');
+console.log('  GET me');
 console.log('  GET nodes');
 console.log('  GET nodes/{id}');
 console.log('  POST perf/{id}');
