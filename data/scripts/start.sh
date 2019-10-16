@@ -111,6 +111,7 @@ tincd --pidfile=tinc.pid --logfile=tinc.log
 
 
 echo -e "${YELLOW}Starting iperf server on VPN interface on TCP port 443${NC}"
+sleep 3
 iperf3 -s -p 443 -B $IpV6 -I iperf3.pid --logfile iperf3.log -D
 
 
