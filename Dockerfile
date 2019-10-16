@@ -31,12 +31,14 @@ RUN apk -U --no-cache add \
     && mkdir -p /home/safeguard \
     && chown -R safeguard:safeguard /home/safeguard
 
-COPY .bashrc /home/safeguard/
-COPY scripts/ /scripts/
-COPY keys/ /keys/
-COPY service/ /service/
+COPY data/ /data/
 
-RUN mkdir -p /etc/tinc/hosts \
+RUN mv /data/.bashrc /home/safeguard \
+    && mv /data/scripts /scripts \
+    && mv /data/keys /keys \
+    && mv /data/service /service \
+    && rm -rf /data \
+    && mkdir -p /etc/tinc/hosts \
     && chown -R safeguard:safeguard /etc/tinc \
     && chown -R safeguard:safeguard /home/safeguard \
     && chown -R safeguard:safeguard /scripts \
