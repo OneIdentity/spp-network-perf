@@ -129,18 +129,33 @@ for i in $(seq 1 $(get_count $IpList)); do
 Name = $Int
 PrivateKeyFile = /keys/rsa${i}_key.priv
 Mode = router
-Interface = eth0
+Interface = tun0
+AddressFamily = ipv6
 EOF
+        # Generate tinc-up and tinc-down
+        cat <<EOF > /etc/tinc/tinc-up
+#!/bin/bash
+ip link set \$INTERFACE up
+ip addr add $IpV6/64 dev \$INTERFACE
+EOF
+        cat <<EOF > /etc/tinc/tinc-down
+#!/bin/bash
+ip link set \$INTERFACE down
+EOF
+        chmod 755 /etc/tinc/tinc-*
     fi
     # Generate host file for node
     cat <<EOF > /etc/tinc/hosts/$Int
 Address = $Ip
-Subnet = $IpV6
+Subnet = $IpV6/128
 $(cat $PubKey)
 EOF
 done
 
 echo -e "${YELLOW}Starting tincd${NC}"
+mkdir -p /dev/net
+mknod /dev/net/tun c 10 200
+chmod 600 /dev/net/tun
 
 
 echo -e "${YELLOW}Starting iperf server on VPN interface on TCP port 443${NC}"

@@ -49,7 +49,12 @@ if [ ! -z "$(which docker)" ]; then
         $ScriptDir/build.sh
     fi
     echo -e "${YELLOW}Running the spp-network-perf container with IP Address: $IpAddress${NC}"
-    docker run -p $IpAddress:8080:8080 -p $IpAddress:655:655 -p $IpAddress:655:655/udp --env-file <(echo "LOCAL_IP=$IpAddress") -it spp-network-perf "$@"
+    docker run \
+        -p $IpAddress:8080:8080 -p $IpAddress:655:655 -p $IpAddress:655:655/udp \
+        --env-file <(echo "LOCAL_IP=$IpAddress") \
+        --cap-add NET_ADMIN \
+        --sysctl net.ipv6.conf.all.disable_ipv6=0 \
+        -it spp-network-perf "$@"
 else
     >&2 echo "You must install docker to use this script"
 fi

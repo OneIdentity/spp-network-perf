@@ -25,10 +25,8 @@ RUN apk -U --no-cache add \
         tinc-doc \
         nodejs \
         npm \
+        iproute2 \
         iperf3 \
-    && mkdir -p /dev/net \
-    && mknod /dev/net/tun c 10 200 \
-    && chmod 600 /dev/net/tun \
     && rm /usr/bin/vi \
     && ln -s /usr/bin/vim /usr/bin/vi \
     && mv /data/.bashrc /root \
@@ -36,6 +34,7 @@ RUN apk -U --no-cache add \
     && mv /data/keys /keys \
     && mv /data/service /service \
     && rm -rf /data \
+    && chmod 600 /keys/*.priv \
     && mkdir -p /etc/tinc/hosts \
     && cd /service && npm install
 
