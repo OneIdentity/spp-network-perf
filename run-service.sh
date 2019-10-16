@@ -44,7 +44,7 @@ if [ $(echo $IpAddress | awk -F',' '{print NF}') -gt 1 ]; then
 fi
 
 if [ ! -z "$(which docker)" ]; then
-    docker images | grep safeguard-bash
+    docker images | grep spp-network-perf
     if [ $? -ne 0 ]; then
         $ScriptDir/build.sh
     fi

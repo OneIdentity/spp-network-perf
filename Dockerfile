@@ -26,6 +26,9 @@ RUN apk -U --no-cache add \
         nodejs \
         npm \
         iperf3 \
+    && mkdir -p /dev/net \
+    && mknod /dev/net/tun c 10 200 \
+    && chmod 600 /dev/net/tun \
     && rm /usr/bin/vi \
     && ln -s /usr/bin/vim /usr/bin/vi \
     && mv /data/.bashrc /root \
