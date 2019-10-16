@@ -3,11 +3,13 @@
 const { exec } = require('child_process');
 
 exports.getAllNodes = function(req, res) {
-    //const child = exec('cmd', ['arg1', 'arg2']);
-    //console.log('error', child.error);
-    //console.log('stdout ', child.stdout);
-    //console.log('stderr ', child.stderr);
-    res.send('node1,node2,node3');
+    const child = exec('/scripts/get-all-nodes.sh', (err, stdout, stderr) => {
+        if (err) {
+            console.error(`exec error: ${err}`);
+            return;
+        }
+        res.send(`${stdout}`);
+    });
 };
 
 exports.getNode = function(req, res) {

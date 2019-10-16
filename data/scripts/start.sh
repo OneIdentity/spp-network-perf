@@ -45,13 +45,24 @@ for Ip in $(echo $IpList | sed "s/,/ /g"); do
     IpV6List=$(echo "$IpV6List$(generate_ipv6_address $Ip),")
 done
 IpV6List=${IpV6List%,}
+for Ip in $(echo $IpList | sed "s/,/ /g"); do
+    IntList=$(echo "$IntList$(convert_ip_address_to_int $Ip),")
+done
+IntList=${IntList%,}
+cat <<EOF > /scripts/nodes.sh
+#!/bin/bash
+IpList=$IpList
+IpV6List=$IpV6List
+IntList=$IntList
+EOF
+chmod 755 /scripts/nodes.sh
 
 
 echo -e "${YELLOW}Setting up tinc.conf, hosts, and keys${NC}"
 for i in $(seq 1 $(get_count $IpList)); do
     Ip=$(get_by_index $IpList $i)
     IpV6=$(get_by_index $IpV6List $i)
-    Int=$(convert_ip_address_to_int $Ip)
+    Int=$(get_by_index $IntList $i)
     PubKey="/keys/rsa${i}_key.pub"
     if [ "$Ip" = "$LOCAL_IP" ]; then
         # Generate tinc.conf
@@ -87,7 +98,7 @@ cleanup()
 {
     kill $(cat iperf3.pid)
     tincd --pidfile=tinc.pid -k
-    echo -e "${YELLOW}Ignore warning about null byte in input"
+    echo -e "${YELLOW}Ignore warning about null byte in input${NC}"
 }
 trap cleanup EXIT
 
