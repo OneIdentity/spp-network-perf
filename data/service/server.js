@@ -4,10 +4,8 @@ var express = require('express'),
 
 var meRoutes = require('./api/routes/meRoutes');
 var nodesRoutes = require('./api/routes/nodesRoutes');
-var perfRoutes = require('./api/routes/perfRoutes');
 meRoutes(app);
 nodesRoutes(app);
-perfRoutes(app);
 
 app.use(function(req, res) {
     res.status(404).send({url: req.originalUrl + ' not found'})
