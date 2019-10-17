@@ -26,6 +26,7 @@ RUN apk -U --no-cache add \
         nodejs \
         npm \
         iproute2 \
+        net-tools \
         iperf3 \
     && rm /usr/bin/vi \
     && ln -s /usr/bin/vim /usr/bin/vi \

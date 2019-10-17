@@ -49,11 +49,13 @@ for Ip in $(echo $IpList | sed "s/,/ /g"); do
     IntList=$(echo "$IntList$(convert_ip_address_to_int $Ip),")
 done
 IntList=${IntList%,}
+MyIndex=$(get_index_of $IpList $LOCAL_IP)
 cat <<EOF > /scripts/nodes.sh
 #!/bin/bash
 IpList=$IpList
 IpV6List=$IpV6List
 IntList=$IntList
+MyIndex=$MyIndex
 EOF
 chmod 755 /scripts/nodes.sh
 
@@ -111,7 +113,7 @@ tincd --pidfile=/tinc.pid --logfile=/tinc.log
 
 
 echo -e "${YELLOW}Starting iperf server on VPN interface on TCP port 443${NC}"
-sleep 3
+sleep 5
 iperf3 -s -p 443 -B $IpV6 -I /iperf3.pid --logfile /iperf3.log -D
 
 
