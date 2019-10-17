@@ -109,7 +109,7 @@ case $UCommand in
             >&2 echo "Unable to find node ID for $TargetIp"
             exit
         fi
-        curl -s http://$IpAddress:8080/nodes/$NodeId/ping
+        curl -s -X POST http://$IpAddress:8080/nodes/$NodeId/ping
         ;;
     IPERF)
         TargetIp=$1
@@ -119,7 +119,7 @@ case $UCommand in
             >&2 echo "Unable to find node ID for $TargetIp"
             exit
         fi
-        curl -s http://$IpAddress:8080/nodes/$NodeId/iperf
+        curl -s -X POST http://$IpAddress:8080/nodes/$NodeId/iperf
         ;;
     STATS)
         curl -X POST http://$IpAddress:8080/me/tincd/stats
