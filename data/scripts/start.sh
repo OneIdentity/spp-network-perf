@@ -97,6 +97,16 @@ EOF
 done
 
 
+echo -e "${YELLOW}Setting up connections in tinc.conf${NC}"
+for i in $(seq 1 $(get_count $IpList)); do
+    Ip=$(get_by_index $IpList $i)
+    Int=$(get_by_index $IntList $i)
+    if [ "$Ip" != "$LOCAL_IP" ]; then
+        echo "ConnectTo = $Int" >> /etc/tinc/tinc.conf
+    fi
+done
+
+
 cleanup()
 {
     if [ -e "/iperf.pid" ]; then
