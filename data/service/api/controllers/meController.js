@@ -57,6 +57,17 @@ exports.getIperf = function(req, res) {
     });
 };
 
+exports.startIperf = function(req, res) {
+    const child = exec('/scripts/start-iperf.sh', (err, stdout, stderr) => {
+        if (err) {
+            var message = `${err}`;
+            console.error(`exec error: ${message}`);
+            return res.status(400).send({ message: `${message}` });
+        }
+        res.send(`${stdout}`);
+    });
+}
+
 exports.getIperfLog = function(req, res) {
     const child = exec('/scripts/get-iperf-log.sh', (err, stdout, stderr) => {
         if (err) {

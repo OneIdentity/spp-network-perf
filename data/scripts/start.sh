@@ -98,9 +98,17 @@ done
 
 cleanup()
 {
-    kill $(cat /iperf3.pid)
-    tincd --pidfile=/tinc.pid -k
-    echo -e "${YELLOW}Ignore warning about null byte in input${NC}"
+    if [ -e "/iperf.pid" ]; then
+        kill $(cat /iperf3.pid)
+        echo -e "${YELLOW}Ignore warning about null byte in input${NC}"
+    else
+        echo -e "${YELLOW}iperf was not running${NC}"
+    fi
+    if [ -e "/tinc.pid" ]; then
+        tincd --pidfile=/tinc.pid -k
+    else
+        echo -e "${YELLOW}tincd was not running${NC}"
+    fi
 }
 trap cleanup EXIT
 

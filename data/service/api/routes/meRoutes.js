@@ -18,6 +18,9 @@ module.exports = function(app) {
     app.route('/me/iperf')
         .get(meHandler.getIperf);
 
+    app.route('/me/iperf/start')
+        .post(meHandler.startIperf);
+
     app.route('/me/iperf/log')
         .get(meHandler.getIperfLog);
 };
