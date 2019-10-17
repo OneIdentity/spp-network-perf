@@ -1,4 +1,4 @@
 #!/bin/bash
 
-cat /iperf.log
+cat /iperf3.log
 
