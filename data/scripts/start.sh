@@ -75,6 +75,9 @@ PrivateKeyFile = /keys/rsa${i}_key.priv
 Mode = router
 Interface = tun0
 EOF
+        if [ ! -z "$PMTU" ]; then
+            echo "PMTU = $PMTU" >> /etc/tinc/tinc.conf
+        fi
         # Generate tinc-up and tinc-down
         cat <<EOF > /etc/tinc/tinc-up
 #!/bin/bash

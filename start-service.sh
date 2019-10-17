@@ -11,6 +11,7 @@ USAGE: start-service.sh [-h] [-c command]
 
   -h  Show help and exit
   -i  Run the container interactively
+  -m  Initial PMTU setting in tinc.conf (default: 1514)
   -c  Alternate command to run in the container (-c /bin/bash to get a prompt)
       Always specify the -c option last (most useful with -i)
 
@@ -18,7 +19,7 @@ EOF
     exit 0
 }
 
-while getopts ":hi" opt; do
+while getopts ":him:" opt; do
     case $opt in
     h)
         print_usage
@@ -26,6 +27,15 @@ while getopts ":hi" opt; do
     i)
         Interactive=true
         shift
+        ;;
+    m)
+        InitialPmtu=$OPTARG
+        regex='^[0-9]+$'
+        if ! [[ "$InitialPmtu" =~ $regex ]] ; then
+            >&2 echo "Non-numeric ID provided '$InitialPmtu'"
+            exit 1
+        fi
+        shift; shift
         ;;
     ?)
         break
@@ -104,7 +114,7 @@ fi
 docker run \
     --name $ContainerName \
     -p $IpAddress:8080:8080 -p $IpAddress:655:655 -p $IpAddress:655:655/udp \
-    --env-file <(echo "LOCAL_IP=$IpAddress"; echo "PEER_IPS=$PeerIpAddresses") \
+    --env-file <(echo "LOCAL_IP=$IpAddress"; echo "PEER_IPS=$PeerIpAddresses"; echo "PMTU=$InitialPmtu") \
     --cap-add NET_ADMIN \
     --sysctl net.ipv6.conf.all.disable_ipv6=0 \
     $DockerArg spp-network-perf "$@"
