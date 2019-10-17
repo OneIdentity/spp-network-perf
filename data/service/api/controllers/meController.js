@@ -46,6 +46,17 @@ exports.getTincdLog = function(req, res) {
     });
 };
 
+exports.signalTincdStats = function(req, res) {
+    const child = exec('/scripts/signal-tincd-stats.sh', (err, stdout, stderr) => {
+        if (err) {
+            var message = `${err}`;
+            console.error(`exec error: ${message}`);
+            return res.status(400).send({ message: `${message}` });
+        }
+        res.send(`${stdout}`);
+    });
+};
+
 exports.getIperf = function(req, res) {
     const child = exec('/scripts/get-iperf.sh', (err, stdout, stderr) => {
         if (err) {

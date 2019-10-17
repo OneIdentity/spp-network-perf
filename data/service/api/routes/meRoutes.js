@@ -15,6 +15,9 @@ module.exports = function(app) {
     app.route('/me/tincd/log')
         .get(meHandler.getTincdLog);
 
+    app.route('/me/tincd/stats')
+        .post(meHandler.signalTincdStats);
+
     app.route('/me/iperf')
         .get(meHandler.getIperf);
 
