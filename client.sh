@@ -59,9 +59,11 @@ fi
 JQ=jq
 if [ -z "$(which jq)" ]; then
     if [ ! -x "$ScriptDir/tmp/jq" ]; then
+        echo -e "${YELLOW}Downloading jq${NC}"
         mkdir -p $ScriptDir/tmp 2> /dev/null
         curl -o $ScriptDir/tmp/jq -L "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64"
         chmod +x $ScriptDir/tmp/jq
+        echo -e "${YELLOW}Continuing${NC}"
     fi
     JQ=$ScriptDir/tmp/jq
 fi
@@ -81,8 +83,12 @@ else
     IpAddress=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p' | tr '\n' ',')
 fi
 IpAddress=${IpAddress%,}
-if [ $(echo $IpAddress | awk -F',' '{print NF}') -gt 1 ]; then
+if [ -z "$IpAddress" ]; then
+    read -p "Local IP Address: " IpAddress
+elif [ $(echo $IpAddress | awk -F',' '{print NF}') -gt 1 ]; then
     read -p "Local IP Address ($IpAddress): " IpAddress
+else
+    echo "Local IP Address: $IpAddress"
 fi
 check_ip_address $IpAddress
 
@@ -102,22 +108,23 @@ case $UCommand in
     PING)
         TargetIp=$1
         check_ip_address $TargetIp
-        NodeId=$(curl -s http://$IpAddress:8080/nodes | jq -r ".[] | select( .IpAddress == \"$TargetIp\" ) | .Id")
+        NodeId=$(curl -s http://$IpAddress:8080/nodes | $JQ -r ".[] | select( .IpAddress == \"$TargetIp\" ) | .Id")
         if [ -z "$NodeId" ]; then
             >&2 echo "Unable to find node ID for $TargetIp"
             exit
         fi
-        curl -s http://$IpAddress:8080/nodes/$NodeId/ping
+        curl -s -X POST http://$IpAddress:8080/nodes/$NodeId/ping
         ;;
     IPERF)
         TargetIp=$1
         check_ip_address $TargetIp
-        NodeId=$(curl -s http://$IpAddress:8080/nodes | jq -r ".[] | select( .IpAddress == \"$TargetIp\" ) | .Id")
+        NodeId=$(curl -s http://$IpAddress:8080/nodes | $JQ -r ".[] | select( .IpAddress == \"$TargetIp\" ) | .Id")
         if [ -z "$NodeId" ]; then
             >&2 echo "Unable to find node ID for $TargetIp"
             exit
         fi
-        curl -s http://$IpAddress:8080/nodes/$NodeId/iperf
+        echo "Patience, this test takes 20 seconds"
+        curl -s -X POST http://$IpAddress:8080/nodes/$NodeId/iperf
         ;;
     STATS)
         curl -X POST http://$IpAddress:8080/me/tincd/stats

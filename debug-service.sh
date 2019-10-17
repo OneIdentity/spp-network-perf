@@ -6,7 +6,9 @@ ContainerName=spp-network-perf-runtime
 print_usage()
 {
     cat <<EOF
-USAGE: stop-service.sh [-h]
+USAGE: debug-service.sh [-h]
+  This script will attempt to attach to the running container to allow you to
+  debug what is going on inside.
 
   -h  Show help and exit
 
@@ -42,7 +44,7 @@ if [ $? -ne 0 ]; then
    >&2 echo "The container is not running"
    exit 1
 else
-   echo -e "${YELLOW}Stopping container${NC}"
-   docker stop -t 5 $ContainerName
+   echo -e "${YELLOW}Entering container${NC}"
+   docker exec -it $ContainerName /bin/bash
 fi
 

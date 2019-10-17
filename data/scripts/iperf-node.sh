@@ -21,6 +21,6 @@ if [ -z "$Ip" ]; then
 fi
 
 echo "Running iperf against '$Int'"
-iperf3 -c $IpV6 -p 443 -6 --connect-timeout 2000 -b 0 -t 60
+iperf3 -c $IpV6 -p 443 -6 --connect-timeout 2000 -b 0 -t 20
 echo ""
 
