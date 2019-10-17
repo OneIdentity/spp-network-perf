@@ -59,9 +59,11 @@ fi
 JQ=jq
 if [ -z "$(which jq)" ]; then
     if [ ! -x "$ScriptDir/tmp/jq" ]; then
+        echo -e "${YELLOW}Downloading jq${NC}"
         mkdir -p $ScriptDir/tmp 2> /dev/null
         curl -o $ScriptDir/tmp/jq -L "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64"
         chmod +x $ScriptDir/tmp/jq
+        echo -e "${YELLOW}Continuing${NC}"
     fi
     JQ=$ScriptDir/tmp/jq
 fi
@@ -102,7 +104,7 @@ case $UCommand in
     PING)
         TargetIp=$1
         check_ip_address $TargetIp
-        NodeId=$(curl -s http://$IpAddress:8080/nodes | jq -r ".[] | select( .IpAddress == \"$TargetIp\" ) | .Id")
+        NodeId=$(curl -s http://$IpAddress:8080/nodes | $JQ -r ".[] | select( .IpAddress == \"$TargetIp\" ) | .Id")
         if [ -z "$NodeId" ]; then
             >&2 echo "Unable to find node ID for $TargetIp"
             exit
@@ -112,7 +114,7 @@ case $UCommand in
     IPERF)
         TargetIp=$1
         check_ip_address $TargetIp
-        NodeId=$(curl -s http://$IpAddress:8080/nodes | jq -r ".[] | select( .IpAddress == \"$TargetIp\" ) | .Id")
+        NodeId=$(curl -s http://$IpAddress:8080/nodes | $JQ -r ".[] | select( .IpAddress == \"$TargetIp\" ) | .Id")
         if [ -z "$NodeId" ]; then
             >&2 echo "Unable to find node ID for $TargetIp"
             exit
