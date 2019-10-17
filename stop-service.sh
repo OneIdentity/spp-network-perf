@@ -42,7 +42,7 @@ if [ $? -ne 0 ]; then
    >&2 echo "The container is not running"
    exit 1
 else
-   echo -e "${YELLOW}Stopping container{$NC}"
+   echo -e "${YELLOW}Stopping container${NC}"
    docker stop -t 5 $ContainerName
 fi
 
