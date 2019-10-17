@@ -35,3 +35,14 @@ exports.pingNode = function(req, res) {
     });
 };
 
+exports.iperfNode = function(req, res) {
+    const child = exec('/scripts/iperf-node.sh ' + req.params.nodeId, (err, stdout, stderr) => {
+        if (err) {
+            var message = `${err}`;
+            console.error(`exec error: ${message}`);
+            return res.status(400).send({ message: `${message}` });
+        }
+        res.send(`${stdout}`);
+    });
+}
+
