@@ -8,5 +8,8 @@ module.exports = function(app) {
 
     app.route('/nodes/:nodeId')
         .get(nodesList.getNode);
+
+    app.route('/nodes/:nodeId/ping')
+        .post(nodesList.pingNode);
 };
 

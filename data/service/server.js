@@ -25,5 +25,6 @@ console.log('  GET me/iperf');
 console.log('  GET me/iperf/log');
 console.log('  GET nodes');
 console.log('  GET nodes/{id}');
+console.log('  POST nodes/{id}/ping');
 console.log('  POST perf/{id}');
 
