@@ -89,21 +89,16 @@ fi
 # Start the container
 if [ ! -z "$Interactive" ]; then
     echo -e "${YELLOW}Running interactive container with IP Address: $IpAddress and Peer IP Addresses: $PeerIpAddresses${NC}"
-    docker run \
-        --name $ContainerName \
-        -p $IpAddress:8080:8080 -p $IpAddress:655:655 -p $IpAddress:655:655/udp \
-        --env-file <(echo "LOCAL_IP=$IpAddress"; echo "PEER_IPS=$PeerIpAddresses") \
-        --cap-add NET_ADMIN \
-        --sysctl net.ipv6.conf.all.disable_ipv6=0 \
-        -it spp-network-perf "$@"
+    DockerArg=-it
 else
     echo -e "${YELLOW}Running background container with IP Address: $IpAddress and Peer IP Addresses: $PeerIpAddresses${NC}"
-    docker run \
-        --name $ContainerName \
-        -p $IpAddress:8080:8080 -p $IpAddress:655:655 -p $IpAddress:655:655/udp \
-        --env-file <(echo "LOCAL_IP=$IpAddress"; echo "PEER_IPS=$PeerIpAddresses") \
-        --cap-add NET_ADMIN \
-        --sysctl net.ipv6.conf.all.disable_ipv6=0 \
-        -d spp-network-perf "$@"
+    DockerArg=-dit
 fi
+docker run \
+    --name $ContainerName \
+    -p $IpAddress:8080:8080 -p $IpAddress:655:655 -p $IpAddress:655:655/udp \
+    --env-file <(echo "LOCAL_IP=$IpAddress"; echo "PEER_IPS=$PeerIpAddresses") \
+    --cap-add NET_ADMIN \
+    --sysctl net.ipv6.conf.all.disable_ipv6=0 \
+    $DockerArg spp-network-perf "$@"
 
