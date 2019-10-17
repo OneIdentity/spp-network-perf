@@ -67,6 +67,7 @@ for i in $(seq 1 $(get_count $IpList)); do
     Int=$(get_by_index $IntList $i)
     PubKey="/keys/rsa${i}_key.pub"
     if [ "$Ip" = "$LOCAL_IP" ]; then
+        MyIpV6=$IpV6
         # Generate tinc.conf
         cat <<EOF > /etc/tinc/tinc.conf
 Name = $Int
@@ -120,9 +121,10 @@ chmod 600 /dev/net/tun
 tincd --pidfile=/tinc.pid --logfile=/tinc.log
 
 
+echo -e "${YELLOW}Sleeping to give tincd time to start before starting iperf server${NC}"
+sleep 3
 echo -e "${YELLOW}Starting iperf server on VPN interface on TCP port 443${NC}"
-sleep 5
-iperf3 -s -p 443 -B $IpV6 -I /iperf3.pid --logfile /iperf3.log -D
+iperf3 -s -p 443 -B $MyIpV6 -I /iperf3.pid --logfile /iperf3.log -D
 
 
 echo -e "${YELLOW}Starting the web service on port 8080${NC}"
