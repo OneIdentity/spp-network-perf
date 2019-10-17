@@ -1,92 +1,36 @@
 'use strict';
 
-const { exec } = require('child_process');
+const { runScript } = require('./controllerUtils');
 
 exports.getMe = function(req, res) {
-    const child = exec('/scripts/get-me.sh', (err, stdout, stderr) => {
-        if (err) {
-            var message = `${err}`;
-            console.error(`exec error: ${message}`);
-            return res.status(400).send({ message: `${message}` });
-        }
-        res.send(`${stdout}`);
-    });
+    runScript('/scripts/get-me.sh', req, res);
 };
 
 exports.getNics = function(req, res) {
-    const child = exec('/scripts/get-nics.sh', (err, stdout, stderr) => {
-        if (err) {
-            var message = `${err}`;
-            console.error(`exec error: ${message}`);
-            return res.status(400).send({ message: `${message}` });
-        }
-        res.send(`${stdout}`);
-    });
+    runScript('/scripts/get-nics.sh', req, res);
 };
 
 exports.getTincd = function(req, res) {
-    const child = exec('/scripts/get-tincd.sh', (err, stdout, stderr) => {
-        if (err) {
-            var message = `${err}`;
-            console.error(`exec error: ${message}`);
-            return res.status(400).send({ message: `${message}` });
-        }
-        res.send(`${stdout}`);
-    });
+    runScript('/scripts/get-tincd.sh', req, res);
 };
 
 exports.getTincdLog = function(req, res) {
-    const child = exec('/scripts/get-tincd-log.sh', (err, stdout, stderr) => {
-        if (err) {
-            var message = `${err}`;
-            console.error(`exec error: ${message}`);
-            return res.status(400).send({ message: `${message}` });
-        }
-        res.send(`${stdout}`);
-    });
+    runScript('/scripts/get-tincd-log.sh', req, res);
 };
 
 exports.signalTincdStats = function(req, res) {
-    const child = exec('/scripts/signal-tincd-stats.sh', (err, stdout, stderr) => {
-        if (err) {
-            var message = `${err}`;
-            console.error(`exec error: ${message}`);
-            return res.status(400).send({ message: `${message}` });
-        }
-        res.send(`${stdout}`);
-    });
+    runScript('/scripts/signal-tincd-stats.sh', req, res);
 };
 
 exports.getIperf = function(req, res) {
-    const child = exec('/scripts/get-iperf.sh', (err, stdout, stderr) => {
-        if (err) {
-            var message = `${err}`;
-            console.error(`exec error: ${message}`);
-            return res.status(400).send({ message: `${message}` });
-        }
-        res.send(`${stdout}`);
-    });
+    runScript('/scripts/get-iperf.sh', req, res);
 };
 
 exports.startIperf = function(req, res) {
-    const child = exec('/scripts/start-iperf.sh', (err, stdout, stderr) => {
-        if (err) {
-            var message = `${err}`;
-            console.error(`exec error: ${message}`);
-            return res.status(400).send({ message: `${message}` });
-        }
-        res.send(`${stdout}`);
-    });
+    runScript('/scripts/start-iperf.sh', req, res);
 }
 
 exports.getIperfLog = function(req, res) {
-    const child = exec('/scripts/get-iperf-log.sh', (err, stdout, stderr) => {
-        if (err) {
-            var message = `${err}`;
-            console.error(`exec error: ${message}`);
-            return res.status(400).send({ message: `${message}` });
-        }
-        res.send(`${stdout}`);
-    });
+    runScript('/scripts/get-iperf-log.sh', req, res);
 };
 
