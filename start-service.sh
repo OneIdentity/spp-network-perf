@@ -39,6 +39,21 @@ if test -t 1; then
 fi
 
 
+# Make sure docker is installed
+if [ -z "$(which docker)" ]; then
+    >&2 echo "You must install docker to use this script"
+    exit 1
+fi
+
+
+# Check to see if spp-network-perf-runtime is running
+docker ps | grep $ContainerName
+if [ $? -eq 0 ]; then
+   echo -e "${YELLOW}The container is already running${NC}"
+   exit 0
+fi
+
+
 # Gather IP address information (only supports IPv4)
 . $ScriptDir/data/scripts/utils.sh
 if [ "$(uname)" = "Darwin" ]; then
@@ -47,8 +62,12 @@ else
     IpAddress=$(ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p' | tr '\n' ',')
 fi
 IpAddress=${IpAddress%,}
-if [ $(echo $IpAddress | awk -F',' '{print NF}') -gt 1 ]; then
+if [ -z "$IpAddress" ]; then
+    read -p "Local IP Address: " IpAddress
+elif [ $(echo $IpAddress | awk -F',' '{print NF}') -gt 1 ]; then
     read -p "Local IP Address ($IpAddress): " IpAddress
+else
+    echo "Local IP Address: $IpAddress"
 fi
 check_ip_address $IpAddress
 read -p "Peer IP addresses (comma-delimited): " PeerIpAddresses
@@ -61,23 +80,11 @@ for Ip in $(echo $PeerIpAddresses | sed "s/,/ /g"); do
 done
 
 
-# Make sure docker is installed
-if [ -z "$(which docker)" ]; then
-    >&2 echo "You must install docker to use this script"
-    exit 1
-fi
-
 # Build spp-network-perf image if needed
 docker images | grep spp-network-perf
 if [ $? -ne 0 ]; then
+    echo -e "${YELLOW}Building container image${NC}"
     $ScriptDir/build.sh
-fi
-
-# Check to see if spp-network-perf-runtime is running
-docker ps | grep spp-network-perf-runtime
-if [ $? -eq 0 ]; then
-   >&2 echo "The container is already running"
-   exit 1
 fi
 
 # Clean up any old container with that name
