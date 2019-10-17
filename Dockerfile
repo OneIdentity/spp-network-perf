@@ -1,6 +1,8 @@
 FROM alpine
 MAINTAINER support@oneidentity.com
 
+COPY data/ /data/
+
 RUN apk -U --no-cache add \
         man \
         man-pages \
@@ -23,19 +25,20 @@ RUN apk -U --no-cache add \
         tinc-doc \
         nodejs \
         npm \
-    && export PAGER=less \
+        iproute2 \
+        net-tools \
+        iperf3 \
     && rm /usr/bin/vi \
     && ln -s /usr/bin/vim /usr/bin/vi \
-    && groupadd -r safeguard \
-    && useradd -r -g safeguard -s /bin/bash safeguard \
-    && mkdir -p /home/safeguard \
-    && chown -R safeguard:safeguard /home/safeguard
-
-COPY .bashrc /home/safeguard/
-
-USER safeguard
-WORKDIR /home/safeguard
+    && mv /data/.bashrc /root \
+    && mv /data/scripts /scripts \
+    && mv /data/keys /keys \
+    && mv /data/service /service \
+    && rm -rf /data \
+    && chmod 600 /keys/*.priv \
+    && mkdir -p /etc/tinc/hosts \
+    && cd /service && npm install
 
 ENTRYPOINT ["/bin/bash"]
-CMD ["-c","exec /bin/bash --rcfile <(echo '. /home/safeguard/.bashrc')"]
+CMD ["-c","exec /bin/bash --rcfile <(echo '. /root/.bashrc; /scripts/start.sh')"]
 
