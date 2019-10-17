@@ -74,7 +74,6 @@ Name = $Int
 PrivateKeyFile = /keys/rsa${i}_key.priv
 Mode = router
 Interface = tun0
-AddressFamily = ipv6
 EOF
         # Generate tinc-up and tinc-down
         cat <<EOF > /etc/tinc/tinc-up
