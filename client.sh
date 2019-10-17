@@ -12,7 +12,7 @@ USAGE: client.sh [-h] [-c command [arg]]
   -h  Show help and exit
   -c  Run command against a running container
       commands:
-      me          Get information about the service
+      status      Get information about the running service
       nodes       List all of the configured nodes
       ping [ip]   Run a ping test against the target IP
       iperf [ip]  Run an iperf test against the target IP
@@ -93,7 +93,7 @@ if [ -z "$Command" ]; then
 fi
 UCommand=$(echo "$Command" | tr '[:lower:]' '[:upper:]')
 case $UCommand in
-    ME)
+    STATUS)
         curl -s http://$IpAddress:8080/me | $JQ .
         ;;
     NODES)
@@ -128,6 +128,8 @@ case $UCommand in
         IperfFile="$ScriptDir/tmp/iperf-$(date +%Y-%m-%d-%H-%M-%S).log"
         curl -o $TincdFile http://$IpAddress:8080/me/tincd/log
         curl -o $IperfFile http://$IpAddress:8080/me/iperf/log
+        echo "tincd.log written to '$TincdFile'"
+        echo "iperf.log written to '$IperfFile'"
         ;;
     *)
         >&2 echo "Unknown command '$Command', Please specify a valid command"
