@@ -11,7 +11,9 @@ app.use(function(req, res) {
     res.status(404).send({url: req.originalUrl + ' not found'})
 });
 
-app.listen(port);
+var server = app.listen(port);
+server.timeout=0;
+console.log('server timeout: ' + server.timeout);
 
 console.log('Web API server started on: ' + port);
 console.log('Endpoints:');

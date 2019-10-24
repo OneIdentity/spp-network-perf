@@ -18,3 +18,6 @@ exports.iperfNode = function(req, res) {
     runScript('/scripts/iperf-node.sh ' + req.params.nodeId, req, res);
 }
 
+exports.xferNode = function(req, res) {
+    runScript('/scripts/iperf-node-xfer.sh ' + req.params.nodeId, req, res);
+}

@@ -126,6 +126,17 @@ case $UCommand in
         echo "Patience, this test takes 20 seconds"
         curl -s -X POST http://$IpAddress:8080/nodes/$NodeId/iperf
         ;;
+    XFER)
+        TargetIp=$1
+        check_ip_address $TargetIp
+        NodeId=$(curl -s http://$IpAddress:8080/nodes | $JQ -r ".[] | select( .IpAddress == \"$TargetIp\" ) | .Id")
+        if [ -z "$NodeId" ]; then
+            >&2 echo "Unable to find node ID for $TargetIp"
+            exit
+        fi
+        echo "Patience, this test may take a while...transferring 1 GB"
+        curl -s -X POST http://$IpAddress:8080/nodes/$NodeId/xfer
+        ;;
     STATS)
         curl -X POST http://$IpAddress:8080/me/tincd/stats
         ;;
