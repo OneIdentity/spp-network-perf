@@ -14,5 +14,8 @@ module.exports = function(app) {
 
     app.route('/nodes/:nodeId/iperf')
         .post(nodesList.iperfNode);
+
+    app.route('/nodes/:nodeId/xfer')
+        .post(nodesList.xferNode);
 };
 
