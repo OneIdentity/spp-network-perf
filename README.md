@@ -1,6 +1,10 @@
 # spp-network-perf
 One Identity Safeguard for Privileged Passwords network performance testing tool
 
+## Support
+
+One Identity open source projects are supported through [One Identity GitHub issues](https://github.com/OneIdentity/spp-network-perf/issues) and the [One Identity Community](https://www.oneidentity.com/community/). This includes all scripts, plugins, SDKs, modules, code snippets or other solutions. For assistance with any One Identity GitHub project, please raise a new Issue on the [One Identity GitHub project](https://github.com/OneIdentity/spp-network-perf/issues) page. You may also visit the [One Identity Community](https://www.oneidentity.com/community/) to ask questions.  Requests for assistance made through official One Identity Support will be referred back to GitHub and the One Identity Community forums where those requests can benefit all users.
+
 ## Prerequisites
 This tool was developed on a Linux workstation with the goal to keep the
 prerequisites as minimal as possible. Using docker provides the ability to run
