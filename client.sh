@@ -68,8 +68,8 @@ if [ -z "$(which jq)" ]; then
     JQ=$ScriptDir/tmp/jq
 fi
 
-# Check if spp-network-perf-runtime is running
-docker ps | grep spp-network-perf-runtime > /dev/null
+# Check if the container is running
+docker ps | grep $ContainerName > /dev/null
 if [ $? -ne 0 ]; then
    >&2 echo "The container is not running"
    exit 1
