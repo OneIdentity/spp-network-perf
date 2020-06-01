@@ -2,6 +2,7 @@
 
 ScriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 Interactive=
+ImageName=spp-network-perf
 ContainerName=spp-network-perf-runtime
 
 print_usage()
@@ -56,7 +57,7 @@ if [ -z "$(which docker)" ]; then
 fi
 
 
-# Check to see if spp-network-perf-runtime is running
+# Check to see if the container is running
 docker ps | grep $ContainerName
 if [ $? -eq 0 ]; then
    echo -e "${YELLOW}The container is already running${NC}"
@@ -90,15 +91,15 @@ for Ip in $(echo $PeerIpAddresses | sed "s/,/ /g"); do
 done
 
 
-# Build spp-network-perf image if needed
-docker images | grep spp-network-perf
+# Build the image if needed
+docker images | grep $ImageName
 if [ $? -ne 0 ]; then
     echo -e "${YELLOW}Building container image${NC}"
     $ScriptDir/build.sh
 fi
 
 # Clean up any old container with that name
-docker ps -a | grep spp-network-perf-runtime
+docker ps -a | grep $ContainerName
 if [ $? -eq 0 ]; then
     docker rm $ContainerName
 fi
@@ -117,5 +118,5 @@ docker run \
     --env-file <(echo "LOCAL_IP=$IpAddress"; echo "PEER_IPS=$PeerIpAddresses"; echo "PMTU=$InitialPmtu") \
     --cap-add NET_ADMIN \
     --sysctl net.ipv6.conf.all.disable_ipv6=0 \
-    $DockerArg spp-network-perf "$@"
+    $DockerArg $ImageName "$@"
 

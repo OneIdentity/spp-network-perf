@@ -36,8 +36,8 @@ if [ -z "$(which docker)" ]; then
     exit 1
 fi
 
-# Stop spp-network-perf-runtime if running
-docker ps | grep spp-network-perf-runtime
+# Stop the container if running
+docker ps | grep $ContainerName
 if [ $? -ne 0 ]; then
    >&2 echo "The container is not running"
    exit 1
